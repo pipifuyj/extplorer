@@ -136,8 +136,9 @@ function ext_init(){
                             	xtype: "tbbutton",
                          		id: 'tb_new',
                               		icon: '<?php echo _EXT_URL ?>/images/_filenew.png',
+					text: 'New File/Directory',
                               		tooltip: '<?php echo ext_Lang::msg('newlink', true ) ?>',
-                              		cls:'x-btn-icon',
+                              		cls:'x-btn-text-icon',
                               		disabled: <?php echo $allow ? 'false' : 'true' ?>,
                               		handler: function() { openActionDialog(this, 'mkitem'); }
                               	},
@@ -154,8 +155,9 @@ function ext_init(){
                               		xtype: "tbbutton",
                              		id: 'tb_copy',
                               		icon: '<?php echo _EXT_URL ?>/images/_editcopy.png',
+					text: 'Copy',
                               		tooltip: '<?php echo ext_Lang::msg('copylink', true ) ?>',
-                              		cls:'x-btn-icon',
+                              		cls:'x-btn-text-icon',
                               		disabled: <?php echo $allow ? 'false' : 'true' ?>,
                               		handler: function() { openActionDialog(this, 'copy'); }
                               	},
@@ -163,20 +165,32 @@ function ext_init(){
                               		xtype: "tbbutton",
                              		id: 'tb_move',
                               		icon: '<?php echo _EXT_URL ?>/images/_move.png',
+					text: 'Move',
                               		tooltip: '<?php echo ext_Lang::msg('movelink', true ) ?>',
-                              		cls:'x-btn-icon',
+                              		cls:'x-btn-text-icon',
                               		disabled: <?php echo $allow ? 'false' : 'true' ?>,
                               		handler: function() { openActionDialog(this, 'move'); }
                               	},
+    		<?php 
+			$enable=false;
+			foreach($GLOBALS['users'] as $index=>$user){
+				if($user[0]==$_SESSION['s_user']){
+					if($user[6]==7) $enable=true;
+				}
+			}
+			if($enable) {	
+		?>
                               	{
                               		xtype: "tbbutton",
                              		id: 'tb_delete',
                               		icon: '<?php echo _EXT_URL ?>/images/_editdelete.png',
+					text: 'Delete',
                               		tooltip: '<?php echo ext_Lang::msg('dellink', true ) ?>',
-                              		cls:'x-btn-icon',
+                              		cls:'x-btn-text-icon',
                               		disabled: <?php echo $allow ? 'false' : 'true' ?>,
                               		handler: function() { openActionDialog(this, 'delete'); }
                               	},
+		<?php } ?>
 /*                              	{
                               		xtype: "tbbutton",
                              		id: 'tb_rename',
@@ -217,8 +231,9 @@ function ext_init(){
                               		xtype: "tbbutton",
                              		id: 'tb_download',
                               		icon: '<?php echo _EXT_URL ?>/images/_down.png',
+					text: 'Donwload',
                               		tooltip: '<?php echo ext_Lang::msg('downlink', true ) ?>',
-                              		cls:'x-btn-icon',
+                              		cls:'x-btn-text-icon',
                               		disabled: <?php echo $allow ? 'false' : 'true' ?>,
                               		handler: function() { openActionDialog(this,'download'); }
                               	},
@@ -227,8 +242,9 @@ function ext_init(){
                               		xtype: "tbbutton",
                              		id: 'tb_upload',
                               		icon: '<?php echo _EXT_URL ?>/images/_up.png',
+					text: 'Upload',
                               		tooltip: '<?php echo ext_Lang::msg('uploadlink', true ) ?>',
-                              		cls:'x-btn-icon',
+                              		cls:'x-btn-text-icon',
                               		disabled: <?php echo $allow && ini_get('file_uploads') ? 'false' : 'true' ?>,
                               		handler: function() { openActionDialog(this, 'upload'); }
                               	},
@@ -257,11 +273,13 @@ function ext_init(){
                           		},*/
                               	'-',
                               	{
-                          			xtype: "tbbutton",
+                          		xtype: "tbbutton",
                              		id: 'tb_info',
                               		icon: '<?php echo _EXT_URL ?>/images/_help.png',
                               		tooltip: '<?php echo ext_Lang::msg('aboutlink', true ) ?>',
-                              		cls:'x-btn-icon',
+					text: 'Info',
+                              		disabled: <?php echo $allow && ini_get('file_uploads') ? 'false' : 'true' ?>,
+                              		cls:'x-btn-text-icon',
                               		handler: function() { openActionDialog(this, 'get_about'); }
                               	},
                               	'-',
@@ -274,9 +292,10 @@ function ext_init(){
                           	    	{	// ADMIN
                           	    		xtype: "tbbutton",
                                  		id: 'tb_admin',
+						text: 'Admin',
                           	    		icon: '<?php echo _EXT_URL ?>/images/_admin.gif',
                           	    		tooltip: '<?php echo ext_Lang::msg('adminlink', true ) ?>',
-                          	    		cls:'x-btn-icon',
+                              			cls:'x-btn-text-icon',
                           	    		handler: function() { openActionDialog(this, 'admin'); }
                           	    	},
                           	    	<?php
@@ -286,8 +305,9 @@ function ext_init(){
                           	    		xtype: "tbbutton",
                                  		id: 'tb_logout',
                           	    		icon: '<?php echo _EXT_URL ?>/images/_logout.png',
+						text: 'Logout',
                           	    		tooltip: '<?php echo ext_Lang::msg('logoutlink', true ) ?>',
-                          	    		cls:'x-btn-icon',
+                              			cls:'x-btn-text-icon',
                           	    		handler: function() { document.location.href='<?php echo make_link('logout', null ) ?>'; }
                           	    	},		
                           	    	'-',
@@ -367,7 +387,7 @@ function ext_init(){
            id: 'gridcm', // id assigned so we can apply custom css (e.g. .x-grid-col-topic b { color:#333 })
            header: "<?php echo ext_Lang::msg('nameheader', true ) ?>",
            dataIndex: 'name',
-           width: 450,
+           width: 650,
            renderer: renderFileName,
            editor: new Ext.form.TextField({
 					allowBlank: false
@@ -419,7 +439,17 @@ function ext_init(){
     	tb = ext_itemgrid.getTopToolbar();
     	if( selections.length > 1 ) {
 //    		tb.items.get('tb_edit').disable();
+    		<?php 
+			$enable=false;
+			foreach($GLOBALS['users'] as $index=>$user){
+				if($user[0]==$_SESSION['s_user']){
+					if($user[6]==7) $enable=true;
+				}
+			}
+			if($enable) {	
+		?>
     		tb.items.get('tb_delete').enable();
+		<?php } ?>
 //    		tb.items.get('tb_rename').disable();
 //    		tb.items.get('tb_chmod').enable();
     		tb.items.get('tb_download').disable();
@@ -428,7 +458,17 @@ function ext_init(){
 //    		tb.items.get('tb_view').enable();
     	} else if(selections.length == 1) {
 //    		tb.items.get('tb_edit')[selections[0].get('is_editable')&&selections[0].get('is_readable') ? 'enable' : 'disable']();
-    		tb.items.get('tb_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+    		<?php 
+			$enable=false;
+			foreach($GLOBALS['users'] as $index=>$user){
+				if($user[0]==$_SESSION['s_user']){
+					if($user[6]==7) $enable=true;
+				}
+			}
+			if($enable) {	
+		?>
+		tb.items.get('tb_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+		<?php } ?>
 //    		tb.items.get('tb_rename')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
 //    		tb.items.get('tb_chmod')[selections[0].get('is_chmodable') ? 'enable' : 'disable']();
     		tb.items.get('tb_download')[selections[0].get('is_readable')&&selections[0].get('is_file') ? 'enable' : 'disable']();
@@ -436,8 +476,18 @@ function ext_init(){
 //    		tb.items.get('tb_archive').enable();
 //    		tb.items.get('tb_view').enable();
     	} else {
-//			tb.items.get('tb_edit').disable();
-    		tb.items.get('tb_delete').disable();
+//		tb.items.get('tb_edit').disable();
+    		<?php 
+			$enable=false;
+			foreach($GLOBALS['users'] as $index=>$user){
+				if($user[0]==$_SESSION['s_user']){
+					if($user[6]==7) $enable=true;
+				}
+			}
+			if($enable) {	
+		?>
+		tb.items.get('tb_delete').disable();
+		<?php } ?>
 //    		tb.items.get('tb_rename').disable();
 //    		tb.items.get('tb_chmod').disable();
     		tb.items.get('tb_download').disable();
@@ -469,7 +519,13 @@ function ext_init(){
     	var selections = gsm.getSelections();
     	if( selections.length > 1 ) {
 //    		gridCtxMenu.items.get('gc_edit').disable();
-    		gridCtxMenu.items.get('gc_delete').enable();
+    		<?php foreach($GLOBALS['users'] as $index=>$user){
+			if($user[0]==$_SESSION['s_user']){
+				if($user[6]==7) echo "gridCtxMenu.items.get('gc_delete').enable();";
+				else echo "gridCtxMenu.items.get('gc_delete').disable();";
+			}
+		}?>
+		gridCtxMenu.items.get('gc_delete').enable();
     		gridCtxMenu.items.get('gc_rename').disable();
 //    		gridCtxMenu.items.get('gc_chmod').enable();
     		gridCtxMenu.items.get('gc_download').disable();
@@ -478,7 +534,12 @@ function ext_init(){
 //    		gridCtxMenu.items.get('gc_view').enable();
     	} else if(selections.length == 1) {
 //    		gridCtxMenu.items.get('gc_edit')[selections[0].get('is_editable')&&selections[0].get('is_readable') ? 'enable' : 'disable']();
-    		gridCtxMenu.items.get('gc_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
+    		<?php foreach($GLOBALS['users'] as $index=>$user){
+			if($user[0]==$_SESSION['s_user']){ 
+				if($user[6]==7)echo "gridCtxMenu.items.get('gc_delete')[selections[0].get('is_deletable') ? 'enable' : 'disable']();";
+				else echo "gridCtxMenu.items.get('gc_delete').disable();";
+			}
+		}?>
     		gridCtxMenu.items.get('gc_rename')[selections[0].get('is_deletable') ? 'enable' : 'disable']();
 //    		gridCtxMenu.items.get('gc_chmod')[selections[0].get('is_chmodable') ? 'enable' : 'disable']();
     		gridCtxMenu.items.get('gc_download')[selections[0].get('is_readable')&&selections[0].get('is_file') ? 'enable' : 'disable']();
@@ -579,7 +640,17 @@ function ext_init(){
 		ext_itemgrid.getSelectionModel().clearSelections();
 		
 		dirCtxMenu.items.get('rename')[node.attributes.is_deletable ? 'enable' : 'disable']();
+    		<?php 
+			$enable=false;
+			foreach($GLOBALS['users'] as $index=>$user){
+				if($user[0]==$_SESSION['s_user']){
+					if($user[6]==7) $enable=true;
+				}
+			}
+			if($enable) {	
+		?>
 		dirCtxMenu.items.get('remove')[node.attributes.is_deletable ? 'enable' : 'disable']();
+		<?php } ?>
 //		dirCtxMenu.items.get('chmod')[node.attributes.is_chmodable ? 'enable' : 'disable']();
 		
 		dirCtxMenu.node = node;
@@ -643,12 +714,23 @@ function ext_init(){
     		text: '<?php echo ext_Lang::msg('chmodlink', true ) ?>',
     		handler: function() { dirCtxMenu.hide();openActionDialog(this, 'chmod'); }
     	},*/
+    		<?php 
+			$enable=false;
+			foreach($GLOBALS['users'] as $index=>$user){
+				if($user[0]==$_SESSION['s_user']){
+					if($user[6]==7) $enable=true;
+				}
+			}
+			if($enable) {	
+		?>
     	{
     		id: 'remove',
     		icon: '<?php echo _EXT_URL ?>/images/_editdelete.png',
     		text: '<?php echo ext_Lang::msg('btnremove', true ) ?>',
     		handler: function() { dirCtxMenu.hide();var num = 1; Ext.Msg.confirm('Confirm', String.format("<?php echo $GLOBALS['error_msg']['miscdelitems'] ?>", num ), function(btn) { deleteDir( btn, dirCtxMenu.node ) }); }
-    	},'-',
+    	},	
+		<?php } ?>
+	'-',
 /*    	<?php if( ($GLOBALS["zip"] || $GLOBALS["tar"] || $GLOBALS["tgz"]) && !ext_isFTPMode() ) { ?>
 	    	{
     			id: 'gc_archive',
@@ -876,7 +958,7 @@ function ext_init(){
 	<?php
 	if( !ext_isFTPMode() && empty( $_SESSION['ftp_login'])) {
 		?>
-		Ext.get('switch_file_mode').on('click', handleFTPLogin );
+		//Ext.get('switch_file_mode').on('click', handleFTPLogin );
 		function handleFTPLogin( e ) {
 			e.preventDefault();
 			openActionDialog( 'switch_file_mode', 'ftp_authentication' );
